@@ -45,7 +45,7 @@ def main():
 	word_scores_table = make_frequency_table(token_lemmas)
 	
 	# Sorting the table by the words that occur the most in the document
-	table_to_list = [(key, value) for key, value in freq_table.items()]
+	table_to_list = [(key, value) for key, value in word_scores_table.items()]
 	sorted_list = sorted(table_to_list, key=lambda x: x[1], reverse=True)
 
 	# Printing all of the words that occur more than once
