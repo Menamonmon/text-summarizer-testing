@@ -3,6 +3,7 @@ import spacy
 import math
 import numpy as np
 import pprint
+from helpers import load_data_files
 
 
 def is_token_word(token):
@@ -17,18 +18,6 @@ def lemmatize_token(token):
 
 def doc_to_lemmas(doc):
     return np.array([lemmatize_token(t) for t in doc if is_token_word(t)])
-
-
-def load_data_files(data_dir):
-    if not os.path.exists(data_dir):
-        raise Exception(f"Dir given does not exist: ({data_dir})")
-
-    docstrs = []
-    for doc_dir in os.listdir(data_dir):
-        with open(f"{data_dir}/{doc_dir}") as f:
-            docstrs.append(f.read())
-
-    return docstrs
 
 
 # def load_docs(data_dir, nlp_model):
@@ -54,7 +43,6 @@ def tf(term, doc, k=0.5):
     max_tf_count = max(counts)
 
 
-
 def idf(term, corpus):
     return math.log((len(corpus) / (1 + len([d for d in corpus if term in d]))))
 
@@ -70,23 +58,36 @@ def main():
     data_corpus = np.array([doc_to_lemmas(doc_model) for doc_model in data_models])
     doc = data_models[0]
     raw_doc = doc_to_lemmas(doc)
-    weights_table = {lemmatize_token(term): tfidf(lemmatize_token(term), raw_doc, data_corpus) if is_token_word(term) else 0 for term in doc}
+    weights_table = {
+        lemmatize_token(term): tfidf(lemmatize_token(term), raw_doc, data_corpus)
+        if is_token_word(term)
+        else 0
+        for term in doc
+    }
     sentences = doc.sents
-    weights_table_ranked = sorted([(w, v) for w, v in weights_table.items()], key=lambda x: x[1])
+    weights_table_ranked = sorted(
+        [(w, v) for w, v in weights_table.items()], key=lambda x: x[1]
+    )
     print(pprint.pformat(weights_table_ranked))
     ranked_sents = sorted(
         sentences,
-        key=lambda sentence: sum(weights_table[lemmatize_token(term)] for term in sentences if is_token_word(term)) / len(sentence),
+        key=lambda sentence: sum(
+            weights_table[lemmatize_token(term)]
+            for term in sentences
+            if is_token_word(term)
+        )
+        / len(sentence),
         # reverse,
     )
-    print('TOTAL # OF SENTS: ', len(ranked_sents))
+    print("TOTAL # OF SENTS: ", len(ranked_sents))
     print(ranked_sents[:100])
-    
+
     # N-Grams
     # Triplets and doubles
-    # Apply tf idf 
+    # Apply tf idf
 
-    # 
+    #
+
 
 if __name__ == "__main__":
     main()
