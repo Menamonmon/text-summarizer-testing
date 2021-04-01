@@ -8,6 +8,8 @@ authors = ["repl.it user <replituser@example.com>"]
 python = "^3.8"
 numpy = "^1.20.1"
 spacy = "^3.0.3"
+python-dotenv = "^0.15.0"
+azure-ai-textanalytics = "^5.0.0"
 
 [tool.poetry.dev-dependencies]
 
