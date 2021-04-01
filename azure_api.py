@@ -2,6 +2,8 @@ import os
 import json
 import requests
 import random as rd
+import pprint
+import spacy
 from helpers import load_data_files
 from dotenv import load_dotenv, find_dotenv
 
@@ -64,12 +66,28 @@ def key_phrase_extraction_example(client, example_doc=None):
 #     return res
 
 
+def filter_sents(sents):
+    for sent in sents:
+        if sent.text.endswith("."):
+            print("#####", sent.text)
+
 def main():
-    dataset = load_data_files("./data")
-    first = dataset[0][:5100]
+    dataset = load_data_files("./data", as_dict=True)
+    nlp = spacy.load("en_core_web_sm")
+    doc_name = "amazon"
+    amazon_raw_doc = dataset.get(doc_name)
+    if amazon_raw_doc is None:
+        print(f"Problem with loading doc {doc_name}")
+        return
+
+    amazon_doc = nlp(amazon_raw_doc)
+
+    sents = filter_sents(amazon_doc.sents)
+    print(pprint.pformat(sents))
+
     api_endpoint = "https://dhs-coding-club-imagine-cup.cognitiveservices.azure.com/"
     client = authenticate_client(api_endpoint, API_KEY)
-    key_phrase_extraction_example(client, example_doc=first)
+    # key_phrase_extraction_example(client, example_doc=amazon_raw_doc)
 
 
 if __name__ == "__main__":
