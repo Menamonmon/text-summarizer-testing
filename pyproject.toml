@@ -10,7 +10,6 @@ numpy = "^1.20.1"
 spacy = "^3.0.3"
 python-dotenv = "^0.15.0"
 azure-ai-textanalytics = "^5.0.0"
-Flask = "^1.1.2"
 
 [tool.poetry.dev-dependencies]
 autopep8 = "^1.5.6"
