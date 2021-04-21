@@ -12,3 +12,7 @@ class Document(models.Model):
         "Date Created", auto_now=True, null=False, blank=False
     )
     text = models.CharField("Document Text", max_length=100_000)
+
+    def __str__(self):
+        username = self.user.username if self.user is not None else "No User"
+        return f"{username}'s Doc Created At {self.date_created}"
